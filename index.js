@@ -1,6 +1,7 @@
 const redux = require("redux");
 const createStore = redux.legacy_createStore;
 const CAKE_ORDERED = "cake_ordered";
+const CAKE_RESTOCKED="cake_restocked";
 //ACTIONS:-
 // * actions are the only way applications can interact with the store
 // * carry some info from app to redux store
@@ -9,15 +10,20 @@ const CAKE_ORDERED = "cake_ordered";
 
 // //ActionCreator:a function which returns a action
 
-function order_cake() {
+function order_cake(qty) {
   return {
     //Action is passed as a method
     type: "CAKE_ORDERED",
-    quantity: 1,
+    payload: qty,
   };
 }
+function order_restocked(qty){
+  return{
+    type:"CAKE_RESTOCKED",
+    payload:qty
+  }
+}
 // //State
-
 const initialState = {
   noOfCakes: 10,
 };
@@ -30,8 +36,13 @@ const reducer = (state = initialState, action) => {
     case "CAKE_ORDERED":
       return {
         ...state,
-        noOfCakes: state.noOfCakes - 1,
+        noOfCakes: state.noOfCakes - action.payload,
       };
+      case"CAKE_RESTOCKED":
+        return{
+          ...state,
+          noOfCakes:state.noOfCakes+action.payload
+        }
     default:
       return state;
   }
@@ -41,6 +52,6 @@ console.log("Initial State:", store.getState()); //since we have not performed a
 const unSubscribe = store.subscribe(() =>
   console.log("Update State:", store.getState())
 );
-store.dispatch(order_cake());
-store.dispatch(order_cake());
+store.dispatch(order_cake(2));
+store.dispatch(order_restocked(1))
 unSubscribe();

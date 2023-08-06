@@ -1,10 +1,13 @@
 const redux = require("redux");
 const createStore = redux.legacy_createStore;
-const combineReducers=redux.combineReducers 
+const combineReducers = redux.combineReducers;
+const applyMiddleware = redux.applyMiddleware;
+const reduxLogger = require("redux-logger");
+const logger = reduxLogger.createLogger();
 const CAKE_ORDERED = "cake_ordered";
 const CAKE_RESTOCKED = "cake_restocked";
-const ICECREAM_ORDERED='iceCream_ordered';
-const ICECREAM_RESTOCKED='iceCream_restocked';
+const ICECREAM_ORDERED = "iceCream_ordered";
+const ICECREAM_RESTOCKED = "iceCream_restocked";
 //ACTIONS:-
 // * actions are the only way applications can interact with the store
 // * carry some info from app to redux store
@@ -84,11 +87,11 @@ const iceCream_reducer = (state = iceCream_initialState, action) => {
       return state;
   }
 };
-const rootReducer=combineReducers({
-  cake:cake_reducer,
-  iceCream:iceCream_reducer
-})
-const store = createStore(rootReducer); // store created and the initialStates have been saved in the store
+const rootReducer = combineReducers({
+  cake: cake_reducer,
+  iceCream: iceCream_reducer,
+});
+const store = createStore(rootReducer, applyMiddleware(logger)); // store created and the initialStates have been saved in the store
 console.log("Initial State:", store.getState()); //since we have not performed any transsitions yet getState would provide
 const unSubscribe = store.subscribe(() =>
   console.log("Update State:", store.getState())
